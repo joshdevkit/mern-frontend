@@ -27,12 +27,10 @@ import { Button } from "@/components/ui/button";
 
 import { ReactNode } from "react";
 
-// Define the props interface for the layout component
-interface GuestLayoutProps {
+type GuestLayoutProps = {
   children: ReactNode;
-}
+};
 
-// Define the layout component using functional syntax
 const GuestLayout = ({ children }: GuestLayoutProps) => {
   const { setTheme } = useTheme();
 
@@ -55,7 +53,7 @@ const GuestLayout = ({ children }: GuestLayoutProps) => {
   return (
     <>
       <header
-        className="sticky top-0 w-full text-gray-800 dark:text-gray-200 
+        className="container w-full text-gray-800 dark:text-gray-200 
         bg-white/30 dark:bg-gray-950/30 
         backdrop-blur-md 
         border-b border-gray-100 z-10"
