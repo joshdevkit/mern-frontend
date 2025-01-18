@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import GuestLayout from "@/app/page";
 import { Button } from "@/components/ui/button";
 import { UpdatePassword } from "@/types.d";
+import CommonLayout from "@/components/CommonLayout";
 
 export default function ChangePassword() {
   const [loading, setLoading] = useState(false);
@@ -64,7 +65,7 @@ export default function ChangePassword() {
   };
 
   return (
-    <GuestLayout>
+    <CommonLayout>
       <div className="container mx-auto p-8">
         <div className="flex justify-center">
           <Card className="w-full max-w-lg">
@@ -133,6 +134,6 @@ export default function ChangePassword() {
           </Card>
         </div>
       </div>
-    </GuestLayout>
+    </CommonLayout>
   );
 }

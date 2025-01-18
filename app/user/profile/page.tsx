@@ -1,5 +1,4 @@
 "use client";
-import GuestLayout from "@/app/page";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,13 +14,14 @@ import {
 } from "@/components/ui/select";
 
 import { Label, Separator } from "@radix-ui/react-dropdown-menu";
-import { Check, Edit, Lock } from "lucide-react";
+import { Check, Edit } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import Link from "next/link";
 import { UpdateUser } from "@/types.d";
+import CommonLayout from "@/components/CommonLayout";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -101,7 +101,7 @@ const Profile = () => {
   };
 
   return (
-    <GuestLayout>
+    <CommonLayout>
       <div className="container mx-auto p-8">
         <div className="flex justify-center">
           <Card className="w-full max-w-2xl bg-white shadow-lg">
@@ -226,7 +226,7 @@ const Profile = () => {
           </Card>
         </div>
       </div>
-    </GuestLayout>
+    </CommonLayout>
   );
 };
 

@@ -178,7 +178,7 @@ export default function SignUp() {
             <CardFooter className="justify-center text-center">
               <h1>
                 Already have an account?
-                <Link href="/auth/signin">
+                <Link href="/auth/login">
                   <span className="text-blue-600 cursor-pointer"> Login</span>
                 </Link>
               </h1>
