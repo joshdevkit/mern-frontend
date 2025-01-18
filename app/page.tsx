@@ -1,4 +1,5 @@
 "use client";
+
 import MainNav from "@/components/MainNav";
 import MobileNav from "@/components/MobileNav";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -29,7 +30,8 @@ import { ReactNode } from "react";
 interface GuestLayoutProps {
   children: ReactNode;
 }
-export default function GuestLayout({ children }: GuestLayoutProps) {
+
+const GuestLayout = ({ children }: GuestLayoutProps) => {
   const { setTheme } = useTheme();
 
   const user = useUser();
@@ -144,4 +146,6 @@ export default function GuestLayout({ children }: GuestLayoutProps) {
       {children}
     </>
   );
-}
+};
+
+export default GuestLayout;
