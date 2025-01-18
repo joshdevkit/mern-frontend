@@ -27,10 +27,12 @@ import { Button } from "@/components/ui/button";
 
 import { ReactNode } from "react";
 
+// Define the props interface for the layout component
 interface GuestLayoutProps {
   children: ReactNode;
 }
 
+// Define the layout component using functional syntax
 const GuestLayout = ({ children }: GuestLayoutProps) => {
   const { setTheme } = useTheme();
 
@@ -148,4 +150,5 @@ const GuestLayout = ({ children }: GuestLayoutProps) => {
   );
 };
 
+// Export the layout component as default
 export default GuestLayout;
