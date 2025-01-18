@@ -45,19 +45,15 @@ export function LoginForm({
       const user = response.data.data.user;
       dispatch(setAuthUser(user));
       navigate.push("/");
-    } catch (error) {
-      if (error instanceof Error && (error as any).response?.data?.errors) {
-        for (const [message] of Object.entries(
-          (error as any).response.data.errors
-        )) {
+    } catch (error: any) {
+      if (error.response?.data?.errors) {
+        for (const [message] of Object.entries(error.response.data.errors)) {
           toast.warning(`${message}`, {
             duration: 3000,
           });
         }
       } else {
-        const errorMessage =
-          (error as any).response?.data?.message || "Something went wrong.";
-        toast.warning(errorMessage);
+        toast.warning(error.response?.data?.message || "Something went wrong.");
       }
 
       console.error("Error:", error);

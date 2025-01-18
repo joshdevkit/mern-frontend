@@ -22,8 +22,9 @@ import { useDispatch } from "react-redux";
 
 import { toast } from "sonner";
 
-import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+
+import { ReactNode } from "react";
 
 export default function GuestLayout({ children }: { children: ReactNode }) {
   const { setTheme } = useTheme();
