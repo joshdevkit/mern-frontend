@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { UpdateUser } from "@/types.d";
 import CommonLayout from "@/components/CommonLayout";
+import Title from "@/components/Title";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -101,132 +102,137 @@ const Profile = () => {
   };
 
   return (
-    <CommonLayout>
-      <div className="container mx-auto p-8">
-        <div className="flex justify-center">
-          <Card className="w-full max-w-2xl bg-white shadow-lg">
-            <CardHeader>
-              <div className="flex items-center space-x-4">
-                <div className="flex flex-col space-y-2">
-                  <CardTitle className="text-lg font-semibold">
-                    {user?.fullname}
-                  </CardTitle>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm text-gray-500">
-                      Joined:{" "}
-                      {user?.createdAt
-                        ? new Date(user.createdAt).toLocaleDateString()
-                        : "N/A"}
-                    </span>
-                    {user?.isVerified ? (
-                      <Check size={16} className="text-green-500" />
-                    ) : (
-                      <span className="text-red-500">Not Verified</span>
-                    )}
+    <>
+      <Title description="Profile page, update your information.">
+        User - Profile
+      </Title>
+      <CommonLayout>
+        <div className="container mx-auto p-8">
+          <div className="flex justify-center">
+            <Card className="w-full max-w-2xl bg-white shadow-lg">
+              <CardHeader>
+                <div className="flex items-center space-x-4">
+                  <div className="flex flex-col space-y-2">
+                    <CardTitle className="text-lg font-semibold">
+                      {user?.fullname}
+                    </CardTitle>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm text-gray-500">
+                        Joined:{" "}
+                        {user?.createdAt
+                          ? new Date(user.createdAt).toLocaleDateString()
+                          : "N/A"}
+                      </span>
+                      {user?.isVerified ? (
+                        <Check size={16} className="text-green-500" />
+                      ) : (
+                        <span className="text-red-500">Not Verified</span>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <Label className="text-sm">Email</Label>
-                  <Input
-                    type="email"
-                    value={userDetails?.email || ""}
-                    disabled={!!userDetails?.isVerified}
-                    className="mt-2"
-                  />
-                  {userDetails?.isVerified && (
-                    <p className="text-xs ">
-                      You are not allowed to update your email once verified.
-                      <span className="text-blue-600">
-                        <Link href="/terms-and-conditions"> Know more.</Link>
-                      </span>
-                    </p>
-                  )}
-                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-sm">Email</Label>
+                    <Input
+                      type="email"
+                      value={userDetails?.email || ""}
+                      disabled={!!userDetails?.isVerified}
+                      className="mt-2"
+                    />
+                    {userDetails?.isVerified && (
+                      <p className="text-xs ">
+                        You are not allowed to update your email once verified.
+                        <span className="text-blue-600">
+                          <Link href="/terms-and-conditions"> Know more.</Link>
+                        </span>
+                      </p>
+                    )}
+                  </div>
 
-                <div>
-                  <Label className="text-sm">Phone Number</Label>
-                  <Input
-                    type="tel"
-                    name="contactNo"
-                    value={formData.contactNo || userDetails?.contactNo || ""}
-                    onChange={handleChange}
-                    readOnly={!isEditing}
-                    disabled={!isEditing}
-                    className="mt-2"
-                  />
-                </div>
+                  <div>
+                    <Label className="text-sm">Phone Number</Label>
+                    <Input
+                      type="tel"
+                      name="contactNo"
+                      value={formData.contactNo || userDetails?.contactNo || ""}
+                      onChange={handleChange}
+                      readOnly={!isEditing}
+                      disabled={!isEditing}
+                      className="mt-2"
+                    />
+                  </div>
 
-                <div>
-                  <Label className="text-sm">Address</Label>
-                  <Input
-                    type="text"
-                    name="address"
-                    value={formData.address || userDetails?.address || ""}
-                    onChange={handleChange}
-                    readOnly={!isEditing}
-                    disabled={!isEditing}
-                    className="mt-2"
-                  />
-                </div>
+                  <div>
+                    <Label className="text-sm">Address</Label>
+                    <Input
+                      type="text"
+                      name="address"
+                      value={formData.address || userDetails?.address || ""}
+                      onChange={handleChange}
+                      readOnly={!isEditing}
+                      disabled={!isEditing}
+                      className="mt-2"
+                    />
+                  </div>
 
-                <div>
-                  <Label className="text-sm">Gender</Label>
-                  <Select
-                    disabled={!isEditing}
-                    name="gender"
-                    value={formData.gender || userDetails?.gender || ""}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, gender: value })
-                    }
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Gender" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Male">Male</SelectItem>
-                      <SelectItem value="Female">Female</SelectItem>
-                      <SelectItem value="Others">Others</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <Separator className="my-4" />
-
-                <div className="flex space-x-4">
-                  <Button
-                    onClick={() => {
-                      if (isEditing) {
-                        handleCancelChanges();
+                  <div>
+                    <Label className="text-sm">Gender</Label>
+                    <Select
+                      disabled={!isEditing}
+                      name="gender"
+                      value={formData.gender || userDetails?.gender || ""}
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, gender: value })
                       }
-                      setIsEditing(!isEditing);
-                    }}
-                    variant="outline"
-                    className="w-full sm:w-auto"
-                  >
-                    <Edit className="mr-2" />
-                    {isEditing ? "Cancel" : "Edit Profile"}
-                  </Button>
-                  {isEditing && (
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Gender" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Male">Male</SelectItem>
+                        <SelectItem value="Female">Female</SelectItem>
+                        <SelectItem value="Others">Others</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <Separator className="my-4" />
+
+                  <div className="flex space-x-4">
                     <Button
-                      onClick={handleSaveChanges}
+                      onClick={() => {
+                        if (isEditing) {
+                          handleCancelChanges();
+                        }
+                        setIsEditing(!isEditing);
+                      }}
+                      variant="outline"
                       className="w-full sm:w-auto"
                     >
-                      Save Changes
+                      <Edit className="mr-2" />
+                      {isEditing ? "Cancel" : "Edit Profile"}
                     </Button>
-                  )}
-                </div>
+                    {isEditing && (
+                      <Button
+                        onClick={handleSaveChanges}
+                        className="w-full sm:w-auto"
+                      >
+                        Save Changes
+                      </Button>
+                    )}
+                  </div>
 
-                <Separator className="my-4" />
-              </div>
-            </CardContent>
-          </Card>
+                  <Separator className="my-4" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </div>
-    </CommonLayout>
+      </CommonLayout>
+    </>
   );
 };
 

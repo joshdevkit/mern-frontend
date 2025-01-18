@@ -14,6 +14,7 @@ import GuestLayout from "@/app/page";
 import { Button } from "@/components/ui/button";
 import { UpdatePassword } from "@/types.d";
 import CommonLayout from "@/components/CommonLayout";
+import Title from "@/components/Title";
 
 export default function ChangePassword() {
   const [loading, setLoading] = useState(false);
@@ -65,75 +66,80 @@ export default function ChangePassword() {
   };
 
   return (
-    <CommonLayout>
-      <div className="container mx-auto p-8">
-        <div className="flex justify-center">
-          <Card className="w-full max-w-lg">
-            <CardHeader>
-              <h2 className="text-2xl font-semibold">Change Password</h2>
-            </CardHeader>
-            <form onSubmit={handleSubmit}>
-              <CardContent>
-                <div className="mb-4">
-                  <Label
-                    htmlFor="currentPassword"
-                    className="block text-sm font-medium text-neutral-950 dark:text-gray-50"
-                  >
-                    Current Password
-                  </Label>
-                  <Input
-                    id="currentPassword"
-                    name="currentPassword"
-                    type="password"
-                    value={formData.currentPassword}
-                    onChange={handleChange}
-                    className="mt-1 w-full"
-                  />
-                </div>
+    <>
+      <Title description="Account setting page, update your credentials.">
+        User - Change Password
+      </Title>
+      <CommonLayout>
+        <div className="container mx-auto p-8">
+          <div className="flex justify-center">
+            <Card className="w-full max-w-lg">
+              <CardHeader>
+                <h2 className="text-2xl font-semibold">Change Password</h2>
+              </CardHeader>
+              <form onSubmit={handleSubmit}>
+                <CardContent>
+                  <div className="mb-4">
+                    <Label
+                      htmlFor="currentPassword"
+                      className="block text-sm font-medium text-neutral-950 dark:text-gray-50"
+                    >
+                      Current Password
+                    </Label>
+                    <Input
+                      id="currentPassword"
+                      name="currentPassword"
+                      type="password"
+                      value={formData.currentPassword}
+                      onChange={handleChange}
+                      className="mt-1 w-full"
+                    />
+                  </div>
 
-                <div className="mb-4">
-                  <Label
-                    htmlFor="newPassword"
-                    className="block text-sm font-medium text-neutral-950 dark:text-gray-50"
-                  >
-                    New Password
-                  </Label>
-                  <Input
-                    id="newPassword"
-                    name="newPassword"
-                    type="password"
-                    value={formData.newPassword}
-                    onChange={handleChange}
-                    className="mt-1 w-full"
-                  />
-                </div>
+                  <div className="mb-4">
+                    <Label
+                      htmlFor="newPassword"
+                      className="block text-sm font-medium text-neutral-950 dark:text-gray-50"
+                    >
+                      New Password
+                    </Label>
+                    <Input
+                      id="newPassword"
+                      name="newPassword"
+                      type="password"
+                      value={formData.newPassword}
+                      onChange={handleChange}
+                      className="mt-1 w-full"
+                    />
+                  </div>
 
-                <div className="mb-0">
-                  <Label
-                    htmlFor="confirmPassword"
-                    className="block text-sm font-medium text-neutral-950 dark:text-gray-50"
-                  >
-                    Confirm New Password
-                  </Label>
-                  <Input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    className="mt-1 w-full"
-                  />
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full" type="submit" disabled={loading}>
-                  {loading ? "Changing..." : "Update Password"}
-                </Button>
-              </CardFooter>
-            </form>
-          </Card>
+                  <div className="mb-0">
+                    <Label
+                      htmlFor="confirmPassword"
+                      className="block text-sm font-medium text-neutral-950 dark:text-gray-50"
+                    >
+                      Confirm New Password
+                    </Label>
+                    <Input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type="password"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      className="mt-1 w-full"
+                    />
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button className="w-full" type="submit" disabled={loading}>
+                    {loading ? "Changing..." : "Update Password"}
+                  </Button>
+                </CardFooter>
+              </form>
+            </Card>
+          </div>
         </div>
-      </div>
-    </CommonLayout>
+      </CommonLayout>
+    </>
   );
 }

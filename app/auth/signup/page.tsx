@@ -20,6 +20,7 @@ import { setAuthUser } from "@/store/authSlice";
 import { SignupFormData } from "@/types.d";
 import useUser from "@/lib/useUser";
 import { toast } from "sonner";
+import Title from "@/components/Title";
 
 export default function SignUp() {
   const user = useUser();
@@ -88,6 +89,9 @@ export default function SignUp() {
 
   return (
     <>
+      <Title description="Welcome to Signup page, here you can start creating your account by providing your informations.">
+        Auth - Signup
+      </Title>
       <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
         <form onSubmit={handleSignup} className="w-full max-w-md">
           <Card>
