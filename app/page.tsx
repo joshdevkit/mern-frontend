@@ -15,10 +15,9 @@ import { useTheme } from "next-themes";
 
 import useUser from "@/lib/useUser";
 import http from "@/lib/utils";
-import { API_URL } from "@/server";
 import { setAuthUser } from "@/store/authSlice";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { toast } from "sonner";

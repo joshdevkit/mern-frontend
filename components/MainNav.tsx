@@ -1,4 +1,4 @@
-import { AppWindow, Calendar } from "lucide-react";
+import { Calendar } from "lucide-react";
 import Link from "next/link";
 
 export default function MainNav() {

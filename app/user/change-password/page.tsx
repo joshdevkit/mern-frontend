@@ -46,17 +46,17 @@ export default function ChangePassword() {
           confirmPassword: "",
         });
       }
-    } catch (error: any) {
+    } catch (error) {
       if (
-        error.response &&
-        error.response.data &&
-        error.response.data.error &&
-        error.response.data.error.errors &&
-        error.response.data.error.errors.password
+        (error as any).response &&
+        (error as any).response.data &&
+        (error as any).response.data.error &&
+        (error as any).response.data.error.errors &&
+        (error as any).response.data.error.errors.password
       ) {
-        toast.error(error.response.data.error.errors.password.message);
+        toast.error((error as any).response.data.error.errors.password.message);
       } else {
-        toast.error(error.response.data.message);
+        toast.error((error as any).response.data.message);
       }
     } finally {
       setLoading(false);

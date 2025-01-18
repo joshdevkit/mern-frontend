@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import useUser from "@/lib/useUser";
-import http from "@/lib/utils"; // Assuming this is your HTTP client (like Axios)
+import http from "@/lib/utils";
 import { setAuthUser } from "@/store/authSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -135,14 +135,14 @@ const Verify = () => {
       </div>
 
       <p className="text-xs text-gray-500 mt-4">
-        Having trouble verifying?{" "}
+        Having trouble verifying?
         <span
           className="text-blue-600 font-medium cursor-pointer"
           onClick={handleResendOtp}
         >
           Resend the code
-        </span>{" "}
-        or{" "}
+        </span>
+        or
         <Link href="/support" className="text-blue-600 font-medium">
           Contact Support
         </Link>

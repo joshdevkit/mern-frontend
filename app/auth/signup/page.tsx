@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import http, { cn } from "@/lib/utils";
+import http from "@/lib/utils";
 import { Label } from "@radix-ui/react-label";
 import { useDispatch } from "react-redux";
 import { Loader, MonitorUp } from "lucide-react";

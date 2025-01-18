@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import useUser from "@/lib/useUser";
 import http from "@/lib/utils";
 import { setAuthUser } from "@/store/authSlice";
-import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
 import {
   Select,
   SelectContent,
@@ -14,13 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+
 import { Label, Separator } from "@radix-ui/react-dropdown-menu";
 import { Check, Edit, Lock } from "lucide-react";
 import { useRouter } from "next/navigation";
