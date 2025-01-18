@@ -148,5 +148,4 @@ const GuestLayout = ({ children }: GuestLayoutProps) => {
   );
 };
 
-// Export the layout component as default
 export default GuestLayout;
