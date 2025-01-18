@@ -60,7 +60,9 @@ export default function SignUp() {
         Object.keys(errorData).forEach((key) => {
           const message = errorData[key]?.message;
           if (message) {
-            toast.warning(message);
+            toast.warning(`${message}`, {
+              duration: 3000,
+            });
           }
         });
 
@@ -86,7 +88,7 @@ export default function SignUp() {
 
   return (
     <>
-      <div className="container mx-auto flex justify-center items-center pt-20 px-4">
+      <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
         <form onSubmit={handleSignup} className="w-full max-w-md">
           <Card>
             <CardHeader>

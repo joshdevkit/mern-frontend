@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { toast } from "sonner";
 
 const Verify = () => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
@@ -44,7 +45,7 @@ const Verify = () => {
   const handleSubmit = async () => {
     const enteredOtp = otp.join("");
     if (enteredOtp.length !== 6) {
-      alert("Please enter all 6 digits of the OTP.");
+      toast.warning("Please provide your OTP");
       return;
     }
 
@@ -63,7 +64,7 @@ const Verify = () => {
         alert("Invalid OTP. Please try again.");
       }
     } catch (error: any) {
-      alert(error.response.data.message);
+      toast.warning(error.response.data.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -71,8 +72,8 @@ const Verify = () => {
 
   const handleResendOtp = async () => {
     try {
-      await http.post("/users/resend-otp");
-      alert("OTP has been resent to your email.");
+      const response = await http.post("/users/resend-otp");
+      toast.success(response.data.data.message);
     } catch (error) {
       console.error("Error resending OTP:", error);
       alert("Failed to resend OTP. Please try again.");
@@ -81,15 +82,15 @@ const Verify = () => {
 
   return (
     <div className="pt-20 flex flex-col items-center justify-center px-4 text-center">
-      <h1 className="text-2xl font-bold text-gray-800 mb-2">
+      <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-50 mb-2">
         Verify Your Account
       </h1>
-      <p className="text-sm text-gray-600 mb-6">
+      <p className="text-sm text-gray-600  dark:text-gray-50 mb-6">
         We've sent a One-Time Password (OTP) to your registered email.
         <br />
         Please enter the 6-digit code below to activate your account.
         <br />
-        <span className="font-semibold text-red-600">
+        <span className="font-semibold text-red-600  dark:text-gray-50">
           Didn't receive the code?
         </span>{" "}
         Click "Resend OTP."
@@ -104,7 +105,11 @@ const Verify = () => {
             value={value}
             onChange={(e) => handleOtpChange(index, e.target.value)}
             maxLength={1}
-            className="w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none text-2xl md:text-3xl font-bold text-center bg-gray-100"
+            className="w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 
+            rounded-md border border-gray-300 
+            focus:ring-2 focus:ring-blue-500 
+            focus:outline-none text-2xl md:text-3xl 
+            font-bold text-center bg-gray-100 dark:bg-neutral-900"
             autoFocus={index === 0}
             inputMode="numeric"
           />
@@ -114,7 +119,7 @@ const Verify = () => {
       <div className="flex flex-col md:flex-row items-center space-y-3 md:space-y-0 md:space-x-4 mt-6">
         <Button
           variant={"default"}
-          className="w-full md:w-auto px-6 py-2 bg-blue-600 text-white hover:bg-blue-700"
+          className="w-full md:w-auto px-6 py-2 bg-blue-600 dark:bg-green-600 dark:text-gray-50 dark:hover:bg-green-700 text-white hover:bg-blue-700"
           onClick={handleSubmit}
           disabled={isSubmitting}
         >

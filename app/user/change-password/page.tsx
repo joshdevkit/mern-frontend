@@ -1,59 +1,63 @@
 "use client";
 import { useState } from "react";
-import { toast } from "sonner"; // Assuming you are using this for notifications
-import http from "@/lib/utils"; // Assuming this is where your API calls are made
-import { API_URL } from "@/server"; // Assuming the API URL is stored here
+import { toast } from "sonner";
+import http from "@/lib/utils";
 import {
   Card,
   CardHeader,
   CardFooter,
   CardContent,
-} from "@/components/ui/card"; // Assuming these are the Card components from ShadCN
-import { Input } from "@/components/ui/input"; // Assuming ShadCN's Input component
-import { Label } from "@/components/ui/label"; // Assuming ShadCN's Label component
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import GuestLayout from "@/app/page";
 import { Button } from "@/components/ui/button";
+import { UpdatePassword } from "@/types.d";
 
 export default function ChangePassword() {
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState<UpdatePassword>({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
 
+  // Handle input changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Handle form submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Basic validation
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      toast.error("All fields are required.");
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      toast.error("New password and confirmation do not match.");
-      return;
-    }
-
     setLoading(true);
 
     try {
-      // Replace with your actual API endpoint
-      const response = await http.post(`${API_URL}/users/change-password`, {
-        currentPassword,
-        newPassword,
-      });
-
-      // Handle success
-      toast.success("Password changed successfully!");
-      // Reset the form or redirect as needed
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
+      const response = await http.post("/users/change-password", formData);
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setFormData({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
+      }
     } catch (error: any) {
-      // Handle error
-      toast.error(
-        error.response?.data?.message || "Failed to change password."
-      );
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.error &&
+        error.response.data.error.errors &&
+        error.response.data.error.errors.password
+      ) {
+        toast.error(error.response.data.error.errors.password.message);
+      } else {
+        toast.error(error.response.data.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -67,65 +71,65 @@ export default function ChangePassword() {
             <CardHeader>
               <h2 className="text-2xl font-semibold">Change Password</h2>
             </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
+              <CardContent>
                 <div className="mb-4">
                   <Label
                     htmlFor="currentPassword"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-neutral-950 dark:text-gray-50"
                   >
                     Current Password
                   </Label>
                   <Input
                     id="currentPassword"
+                    name="currentPassword"
                     type="password"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    value={formData.currentPassword}
+                    onChange={handleChange}
                     className="mt-1 w-full"
-                    required
                   />
                 </div>
 
                 <div className="mb-4">
                   <Label
                     htmlFor="newPassword"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-neutral-950 dark:text-gray-50"
                   >
                     New Password
                   </Label>
                   <Input
                     id="newPassword"
+                    name="newPassword"
                     type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
+                    value={formData.newPassword}
+                    onChange={handleChange}
                     className="mt-1 w-full"
-                    required
                   />
                 </div>
 
                 <div className="mb-0">
                   <Label
                     htmlFor="confirmPassword"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-neutral-950 dark:text-gray-50"
                   >
                     Confirm New Password
                   </Label>
                   <Input
                     id="confirmPassword"
+                    name="confirmPassword"
                     type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
                     className="mt-1 w-full"
-                    required
                   />
                 </div>
-              </form>
-            </CardContent>
-            <CardFooter>
-              <Button className="w-full" type="submit" disabled={loading}>
-                {loading ? "Changing..." : "Update Password"}
-              </Button>
-            </CardFooter>
+              </CardContent>
+              <CardFooter>
+                <Button className="w-full" type="submit" disabled={loading}>
+                  {loading ? "Changing..." : "Update Password"}
+                </Button>
+              </CardFooter>
+            </form>
           </Card>
         </div>
       </div>

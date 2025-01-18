@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import http, { cn } from "@/lib/utils";
-import { MonitorUp } from "lucide-react";
+import { Loader } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -25,7 +25,6 @@ import { toast } from "sonner";
 const Signin = () => {
   const [loadingState, setLoadingState] = useState(false);
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
-
   const [formData, setFormData] = useState<SignInFormData>({
     email: "",
     password: "",
@@ -46,7 +45,7 @@ const Signin = () => {
   const loginHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoadingState(true);
-    setFormErrors({}); // Reset any previous errors
+    setFormErrors({});
 
     try {
       const response = await http.post("/users/login", formData);
@@ -58,11 +57,12 @@ const Signin = () => {
 
       if (error.response?.data?.errors) {
         setFormErrors(error.response.data.errors);
-
         for (const [field, message] of Object.entries(
           error.response.data.errors
         )) {
-          toast.warning(`${message}`);
+          toast.warning(`${message}`, {
+            duration: 3000,
+          });
         }
       } else {
         toast.warning(error.response?.data?.message || "Something went wrong.");
@@ -79,15 +79,16 @@ const Signin = () => {
       navigate.push("/");
     }
   }, [user, navigate]);
+
   return (
-    <div className="container mx-auto flex justify-center items-center pt-20 px-4">
+    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <form onSubmit={loginHandler} className="w-full max-w-md">
         <Card>
           <CardHeader>
-            <CardTitle className="flex gap-3">
-              <MonitorUp /> Signin
-            </CardTitle>
-            <CardDescription>Signin to start your session.</CardDescription>
+            <CardTitle className="text-2xl">Login</CardTitle>
+            <CardDescription>
+              Enter your email below to login to your account
+            </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
             <div className="grid w-full items-center gap-1.5">
@@ -122,8 +123,12 @@ const Signin = () => {
             </div>
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full">
-              Login
+            <Button type="submit" className="w-full" disabled={loadingState}>
+              {loadingState ? (
+                <Loader className="animate-spin w-5 h-5 text-white" />
+              ) : (
+                "Login"
+              )}
             </Button>
           </CardFooter>
           <CardFooter className="justify-end text-end m-0">
@@ -135,12 +140,12 @@ const Signin = () => {
           </CardFooter>
           <CardFooter className="flex justify-center items-center">
             <Separator className=" w-1/2" />
-            <span className="mx-4 text-gray-600">or</span>
+            <span className="mx-4 text-gray-600 dark:text-gray-50">or</span>
             <Separator className=" w-1/2" />
           </CardFooter>
           <CardFooter>
             <Link
-              className="w-full  py-2 px-4 rounded-md text-center bg-gray-200 hover:bg-gray-100"
+              className="w-full py-2 px-4 rounded-md text-center bg-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100"
               href="/auth/signup"
             >
               Create your account here

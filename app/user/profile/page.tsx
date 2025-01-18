@@ -4,27 +4,106 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import useUser from "@/lib/useUser";
+import http from "@/lib/utils";
+import { setAuthUser } from "@/store/authSlice";
 import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { Label, Separator } from "@radix-ui/react-dropdown-menu";
 import { Check, Edit, Lock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { toast } from "sonner";
+import Link from "next/link";
+import { UpdateUser } from "@/types.d";
 
 const Profile = () => {
-  const user = useUser(); // get current user data
+  const dispatch = useDispatch();
+  const user = useUser();
   const [userDetails, setUserDetails] = useState(user);
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useRouter();
 
+  const [formData, setFormData] = useState<UpdateUser>({
+    contactNo: "",
+    address: "",
+    gender: "",
+    avatar: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await http.get("/users/current-user");
+        const userData = response.data.data.user;
+        setUserDetails(userData);
+        setFormData({
+          contactNo: userData.contactNo || "",
+          address: userData.address || "",
+          gender: userData.gender || "",
+          avatar: userData.avatar || "",
+        });
+        dispatch(setAuthUser(userData));
+      } catch (error) {
+        console.error("Error fetching current user:", error);
+        navigate.push("/auth/signin");
+      }
+    };
+    fetchCurrentUser();
+  }, []);
+
   useEffect(() => {
     if (!user) {
       navigate.push("/auth/signin");
+      return;
     }
   }, [user, navigate]);
 
-  const handleSaveChanges = () => {
-    toast.success("Profile updated successfully!");
+  const handleCancelChanges = () => {
+    setFormData({
+      contactNo: userDetails?.contactNo || "",
+      address: userDetails?.address || "",
+      gender: userDetails?.gender || "",
+      avatar: userDetails?.avatar || "",
+    });
+    setIsEditing(false);
+  };
+
+  const handleSaveChanges = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await http.post("/users/update-profile", formData);
+      toast.success(response.data.message, {
+        duration: 3000,
+      });
+    } catch (error: any) {
+      toast.warning(error, {
+        duration: 3000,
+      });
+    }
+
     setIsEditing(false);
   };
 
@@ -32,7 +111,6 @@ const Profile = () => {
     <GuestLayout>
       <div className="container mx-auto p-8">
         <div className="flex justify-center">
-          {/* Profile Card */}
           <Card className="w-full max-w-2xl bg-white shadow-lg">
             <CardHeader>
               <div className="flex items-center space-x-4">
@@ -57,13 +135,32 @@ const Profile = () => {
               </div>
             </CardHeader>
             <CardContent>
-              {/* Profile Information */}
               <div className="space-y-4">
                 <div>
                   <Label className="text-sm">Email</Label>
                   <Input
                     type="email"
                     value={userDetails?.email || ""}
+                    disabled={!!userDetails?.isVerified}
+                    className="mt-2"
+                  />
+                  {userDetails?.isVerified && (
+                    <p className="text-xs ">
+                      You are not allowed to update your email once verified.
+                      <span className="text-blue-600">
+                        <Link href="/terms-and-conditions"> Know more.</Link>
+                      </span>
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <Label className="text-sm">Phone Number</Label>
+                  <Input
+                    type="tel"
+                    name="contactNo"
+                    value={formData.contactNo || userDetails?.contactNo || ""}
+                    onChange={handleChange}
                     readOnly={!isEditing}
                     disabled={!isEditing}
                     className="mt-2"
@@ -71,23 +168,49 @@ const Profile = () => {
                 </div>
 
                 <div>
-                  <Label className="text-sm">Phone Number</Label>
+                  <Label className="text-sm">Address</Label>
                   <Input
                     type="text"
-                    // value={userDetails?.phone || ""}
-                    // readOnly={!isEditing}
-                    // disabled={!isEditing}
+                    name="address"
+                    value={formData.address || userDetails?.address || ""}
+                    onChange={handleChange}
+                    readOnly={!isEditing}
+                    disabled={!isEditing}
                     className="mt-2"
                   />
                 </div>
 
-                {/* Separator */}
+                <div>
+                  <Label className="text-sm">Gender</Label>
+                  <Select
+                    disabled={!isEditing}
+                    name="gender"
+                    value={formData.gender || userDetails?.gender || ""}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, gender: value })
+                    }
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Gender" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Male">Male</SelectItem>
+                      <SelectItem value="Female">Female</SelectItem>
+                      <SelectItem value="Others">Others</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 <Separator className="my-4" />
 
-                {/* Actions */}
                 <div className="flex space-x-4">
                   <Button
-                    onClick={() => setIsEditing(!isEditing)}
+                    onClick={() => {
+                      if (isEditing) {
+                        handleCancelChanges();
+                      }
+                      setIsEditing(!isEditing);
+                    }}
                     variant="outline"
                     className="w-full sm:w-auto"
                   >
@@ -105,18 +228,6 @@ const Profile = () => {
                 </div>
 
                 <Separator className="my-4" />
-
-                {/* Change Password Action */}
-                <div className="flex justify-end">
-                  <Button
-                    onClick={() => navigate.push("/user/change-password")}
-                    variant="ghost"
-                    className="text-blue-500"
-                  >
-                    <Lock className="mr-2" />
-                    Change Password
-                  </Button>
-                </div>
               </div>
             </CardContent>
           </Card>
