@@ -26,7 +26,10 @@ import { Button } from "@/components/ui/button";
 
 import { ReactNode } from "react";
 
-export default function GuestLayout({ children }: { children: ReactNode }) {
+interface GuestLayoutProps {
+  children: ReactNode;
+}
+export default function GuestLayout({ children }: GuestLayoutProps) {
   const { setTheme } = useTheme();
 
   const user = useUser();
