@@ -18,7 +18,7 @@ export default function Home() {
       <CommonLayout>
         <section className="container bg-gradient-to-r from-teal-500 to-blue-600 text-white py-20">
           <div className="container mx-auto text-center">
-            <h1 className="text-5xl font-bold mb-6">
+            <h1 className="text-5xl font-bold mb-6 mt-10">
               Brighten Your Smile with
               <span className="text-blue-300"> SmileCare Dental</span>
             </h1>
