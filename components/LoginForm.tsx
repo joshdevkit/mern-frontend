@@ -40,7 +40,7 @@ export function LoginForm({
   };
 
   const user = useUser();
-  const role = useRole();
+  const role = useRole() || "";
   const navigate = useRouter();
   const dispatch = useDispatch();
 
@@ -72,9 +72,9 @@ export function LoginForm({
 
   useEffect(() => {
     if (user && role) {
-      if (role === "User") {
+      if (role.toString() === "User") {
         navigate.push("/");
-      } else if (role === "Admin") {
+      } else if (role.toString() === "Admin") {
         navigate.push("/admin/dashboard");
       }
     }

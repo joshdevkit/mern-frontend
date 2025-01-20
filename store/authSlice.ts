@@ -1,9 +1,9 @@
-import { User, UserRole } from "@/types.d";
+import { CreateRole, User } from "@/types.d";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
   user: User | null;
-  role: UserRole | null;
+  role: CreateRole | null;
 }
 
 const initialState: AuthState = {
@@ -18,7 +18,7 @@ const authSlice = createSlice({
     setAuthUser: (state, action: PayloadAction<User | null>) => {
       state.user = action.payload;
     },
-    setAuthRole: (state, action: PayloadAction<UserRole | null>) => {
+    setAuthRole: (state, action: PayloadAction<CreateRole | null>) => {
       state.role = action.payload;
     },
   },
