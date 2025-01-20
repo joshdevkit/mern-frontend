@@ -62,7 +62,7 @@ const Profile = () => {
         dispatch(setAuthUser(userData));
       } catch (error) {
         console.error("Error fetching current user:", error);
-        navigate.push("/auth/signin");
+        navigate.push("/auth/login");
       }
     };
     fetchCurrentUser();
