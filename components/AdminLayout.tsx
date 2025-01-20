@@ -80,7 +80,7 @@ export function AdminLayout({
   const navigate = useRouter();
   const role = useRole();
   React.useEffect(() => {
-    if (role !== "Admin") {
+    if (role?.toString() !== "Admin") {
       navigate.push("/");
     }
   }, [role, navigate]);
