@@ -27,6 +27,7 @@ import Title from "@/components/Title";
 const Profile = () => {
   const dispatch = useDispatch();
   const user = useUser();
+
   const [userDetails, setUserDetails] = useState(user);
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useRouter();
@@ -69,7 +70,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (!user) {
-      navigate.push("/auth/signin");
+      navigate.push("/auth/login");
       return;
     }
   }, [user, navigate]);

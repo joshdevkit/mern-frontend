@@ -11,12 +11,12 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
-import { Sun, Check, X, Moon } from "lucide-react";
+import { Sun, Check, X, Moon, ArrowBigRight } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import useUser from "@/lib/useUser";
 import http from "@/lib/utils";
-import { setAuthUser } from "@/store/authSlice";
+import { setAuthRole, setAuthUser } from "@/store/authSlice";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 
@@ -39,6 +39,7 @@ const CommonLayout = ({ children }: CommonLayoutProps) => {
   const handleLogout = async () => {
     await http.post("/users/logout");
     dispatch(setAuthUser(null));
+    dispatch(setAuthRole(null));
     navigate.push("/");
     toast.success("Logged Out Successfully");
   };
@@ -49,7 +50,7 @@ const CommonLayout = ({ children }: CommonLayoutProps) => {
         className="sticky top-0 w-full text-gray-800 dark:text-gray-200 
         bg-white/30 dark:bg-gray-950/30 
         backdrop-blur-md 
-        border-b border-gray-100 z-10 
+        border-b border-gray-200 z-10 
         "
       >
         <div className="h-14 container flex items-center">
@@ -67,7 +68,7 @@ const CommonLayout = ({ children }: CommonLayoutProps) => {
                           <p className="dark:text-gray-100">
                             {user.fullname
                               .split(" ")
-                              .map((word) => word[0])
+                              .map((word: any) => word[0])
                               .join("")
                               .toUpperCase()}
                           </p>
@@ -123,10 +124,11 @@ const CommonLayout = ({ children }: CommonLayoutProps) => {
               </div>
             ) : (
               <Button
-                onClick={() => navigate.push("/auth/login")}
+                onClick={() => navigate.push("/auth/signup")}
                 className="px-4 py-2 text-white rounded-md hover:bg-neutral-700"
               >
-                Try our services
+                <ArrowBigRight className="w-6 h-6 rounded-lg border border-gray-100 dark:bg-neutral-900 dark:text-gray-50" />
+                Get Started
               </Button>
             )}
 

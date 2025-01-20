@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import GuestLayout from "@/app/page";
 import { Button } from "@/components/ui/button";
 import { UpdatePassword } from "@/types.d";
 import CommonLayout from "@/components/CommonLayout";

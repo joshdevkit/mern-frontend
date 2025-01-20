@@ -34,3 +34,28 @@ export type UpdatePassword = {
   newPassword: string;
   confirmPassword: string;
 };
+
+export type Roles = {
+  _id: string;
+  role: string;
+  createdAt: Date;
+};
+
+export type CreateRole = {
+  role: string;
+};
+
+export type Services = {
+  title: string;
+  description: string;
+  content: string;
+  footer: string;
+};
+
+export type Service = {
+  _id: string;
+  title: string;
+  description: string;
+  content: string;
+  footer: string;
+};

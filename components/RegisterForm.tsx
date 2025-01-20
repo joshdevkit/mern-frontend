@@ -1,34 +1,49 @@
 "use client";
-
-import { Calendar, EyeClosed, EyeOff, Loader } from "lucide-react";
-import http, { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
-import useUser from "@/lib/useUser";
-import { SignInFormData } from "@/types.d";
+import http, { cn } from "@/lib/utils";
+import { Label } from "@radix-ui/react-label";
 import { useDispatch } from "react-redux";
-import { setAuthRole, setAuthUser } from "@/store/authSlice";
-import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { Calendar, EyeClosed, EyeOff, Loader, MonitorUp } from "lucide-react";
 import Link from "next/link";
-import useRole from "@/lib/useRole";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { setAuthUser } from "@/store/authSlice";
+import { SignupFormData } from "@/types.d";
+import useUser from "@/lib/useUser";
+import { toast } from "sonner";
 
-export function LoginForm({
+export function RegisterForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const user = useUser();
+  const dispatch = useDispatch();
+  const navigate = useRouter();
+  const [loadingState, setLoadingState] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const [loadingState, setLoadingState] = useState(false);
-  const [formData, setFormData] = useState<SignInFormData>({
+  const toggleConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+  const [formData, setFormData] = useState<SignupFormData>({
+    fullname: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,26 +54,24 @@ export function LoginForm({
     });
   };
 
-  const user = useUser();
-  const role = useRole();
-  const navigate = useRouter();
-  const dispatch = useDispatch();
-
-  const loginHandler = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoadingState(true);
 
     try {
-      const response = await http.post("/users/login", formData);
+      const response = await http.post("/users/signup", formData);
       const user = response.data.data.user;
       dispatch(setAuthUser(user));
-      dispatch(setAuthRole(user.role));
+      navigate.push("/auth/verify");
     } catch (error: any) {
-      if (error.response.data.errors) {
-        for (const [fields, message] of Object.entries(
-          error.response.data.errors
+      if (error.response.data.error) {
+        for (const [fields, errorDetails] of Object.entries(
+          error.response.data.error.errors
         )) {
-          toast.warning(`${fields.toLocaleUpperCase()} | ${message}`, {
+          const errorMessage =
+            (errorDetails as { message?: string }).message ||
+            "Something went wrong.";
+          toast.warning(`${fields.toLocaleUpperCase()} | ${errorMessage}`, {
             duration: 3000,
           });
         }
@@ -71,19 +84,15 @@ export function LoginForm({
   };
 
   useEffect(() => {
-    if (user && role) {
-      if (role === "User") {
-        navigate.push("/");
-      } else if (role === "Admin") {
-        navigate.push("/admin/dashboard");
-      }
+    if (user && user.isVerified) {
+      navigate.push("/");
     }
-  }, [user, navigate, role]);
+  }, [user, navigate]);
 
   return (
     <>
       <div className={cn("flex flex-col gap-6", className)} {...props}>
-        <form onSubmit={loginHandler}>
+        <form onSubmit={handleSignup}>
           <div className="flex flex-col gap-6">
             <div className="flex flex-col items-center gap-2">
               <a
@@ -97,16 +106,27 @@ export function LoginForm({
               </a>
               <h1 className="text-xl font-bold">Welcome to Dental Inc.</h1>
               <div className="text-center text-sm">
-                Don&apos;t have an account?{" "}
+                Already have an account?{" "}
                 <Link
-                  href="/auth/signup"
+                  href="/auth/login"
                   className="underline underline-offset-4"
                 >
-                  Sign up
+                  Login
                 </Link>
               </div>
             </div>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="email">Name</Label>
+                <Input
+                  id="fullname"
+                  type="text"
+                  name="fullname"
+                  onChange={handleChange}
+                  disabled={loadingState}
+                  placeholder="John Doe"
+                />
+              </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -116,7 +136,6 @@ export function LoginForm({
                   onChange={handleChange}
                   disabled={loadingState}
                   placeholder="mail@example.com"
-                  // autoComplete="off"
                 />
               </div>
               <div className="grid gap-2">
@@ -130,7 +149,6 @@ export function LoginForm({
                     disabled={loadingState}
                     placeholder="Password"
                     className="pr-10"
-                    // autoComplete="off"
                   />
                   <button
                     type="button"
@@ -141,11 +159,33 @@ export function LoginForm({
                   </button>
                 </div>
               </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    onChange={handleChange}
+                    disabled={loadingState}
+                    placeholder="Confirm Password"
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={toggleConfirmPassword}
+                    className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600"
+                  >
+                    {showConfirmPassword ? <EyeOff /> : <EyeClosed />}
+                  </button>
+                </div>
+              </div>
               <Button type="submit" className="w-full" disabled={loadingState}>
                 {loadingState ? (
                   <Loader className="animate-spin w-5 h-5 text-white dark:text-black" />
                 ) : (
-                  "Login"
+                  "Sign Up"
                 )}
               </Button>
             </div>
@@ -163,7 +203,7 @@ export function LoginForm({
                   fill="currentColor"
                 />
               </svg>
-              Continue with Google
+              Signup with Google
             </Button>
           </div>
         </form>
